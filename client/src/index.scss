@@ -1,0 +1,43 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700&display=swap'); // Roboto
+
+:root {
+  --font-base: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif; // theme font
+
+  // dark theme colors
+  --primary-color: #181818;
+  --secondary-color: #202020;
+  --divider-color: #373737;
+  --button-color: #3ea6ff;
+  --background-color: #999;
+  --white-color: #ffffff;
+  --black-color: #000000;
+  --yellow-color: #febb02;
+  --green-color: #008009;
+  --gray-color: gray;
+  --red-color: red;
+  --darkGray-color: rgb(88, 88, 88);
+  --lightGray-color: lightgray;
+  --lightBlue-color: #ebf3ff;
+  --modalBg-color: rgba(0, 0, 0, 0.418);
+  --border-color: rgb(224, 224, 224);
+  --widget-color: rgb(255, 255, 255);
+
+  // shadows
+  --boxShadow: 0px 0px 10px -5px rgba(0, 0, 0, 0.4);
+  --webkitBoxShadow: 0px 0px 10px -5px rgba(0, 0, 0, 0.4);
+
+  --widgetShadow: rgba(0, 0, 0, 0.1) 0px 5px 15px;
+  --widgetWebkitShadow: rgba(0, 0, 0, 0.1) 0px 5px 15px;
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  -webkit-tap-highlight-color: transparent;
+  font-family: var(--font-base), 'sans-serif';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
