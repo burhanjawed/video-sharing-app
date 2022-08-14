@@ -119,15 +119,16 @@ export const getTrendVideo = async (req, res, next) => {
 export const getSubVideo = async (req, res, next) => {
   try {
     const user = await User.findById(req.user.id);
-    const subscriptions = user.subscriptions;
+    const subscriptions = user.subscriptions; // get user subscriptions
 
+    // return list of subscriptions' videos
     const list = await Promise.all(
       subscriptions.map((channelId) => {
         return Video.find({ userId: channelId });
       })
     );
 
-    res.status(200).json(list.flat().sort((a, b) => b.createdAt - a.createdAt));
+    res.status(200).json(list.flat().sort((a, b) => b.createdAt - a.createdAt)); // sort by video created date
   } catch (err) {
     next(err);
   }
