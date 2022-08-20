@@ -1,5 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
+import axios from 'axios';
+import { useDispatch } from 'react-redux';
+import { loginFailure, loginStart, loginSuccess } from '../redux/userSlice';
 
 // Styles
 const Container = styled.div`
@@ -68,18 +71,57 @@ const Link = styled.span`
 `;
 
 const Login = () => {
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+
+  const dispatch = useDispatch();
+
+  // Login user
+  const handleLogin = async (e) => {
+    e.preventDefault();
+
+    dispatch(loginStart());
+
+    try {
+      const res = await axios.post(`/auth/signin`, {
+        name: username,
+        password,
+      });
+      dispatch(loginSuccess(res.data));
+    } catch (err) {
+      setError(err);
+      dispatch(loginFailure());
+    }
+  };
+
   return (
     <Container>
       <Wrapper>
         <Title>Login</Title>
         <SubTitle>to continue to LamaTube</SubTitle>
-        <Input placeholder='username' />
-        <Input type='password' placeholder='password' />
-        <Button>Login</Button>
+        <Input
+          placeholder='username'
+          onChange={(e) => setUsername(e.target.value)}
+        />
+        <Input
+          type='password'
+          placeholder='password'
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <Button onClick={handleLogin}>Login</Button>
         <Title>or</Title>
-        <Input placeholder='username' />
-        <Input placeholder='email' />
-        <Input type='password' placeholder='password' />
+        <Input
+          placeholder='username'
+          onChange={(e) => setUsername(e.target.value)}
+        />
+        <Input placeholder='email' onChange={(e) => setEmail(e.target.value)} />
+        <Input
+          type='password'
+          placeholder='password'
+          onChange={(e) => setPassword(e.target.value)}
+        />
         <Button>Sign Up</Button>
       </Wrapper>
       <More>

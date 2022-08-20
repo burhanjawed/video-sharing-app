@@ -42,7 +42,7 @@ router.get('/sub', verifyToken, getSubVideo);
 // get videos by tags
 router.get('/tags', getVideoByTag);
 
-// // get videos by title
+// get videos by title
 router.get('/search', getVideoBySearch);
 
 export default router;

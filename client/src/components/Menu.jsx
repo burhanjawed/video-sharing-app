@@ -18,6 +18,7 @@ import FlagOutlinedIcon from '@mui/icons-material/FlagOutlined';
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
 import SettingsBrightnessOutlinedIcon from '@mui/icons-material/SettingsBrightnessOutlined';
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
+import { useSelector } from 'react-redux';
 
 // Styles
 const Container = styled.div`
@@ -91,6 +92,8 @@ const Title = styled.h2`
 `;
 
 const Menu = ({ themeMode, setThemeMode }) => {
+  const { currentUser } = useSelector((state) => state.user);
+
   return (
     <Container>
       <Wrapper>
@@ -102,15 +105,27 @@ const Menu = ({ themeMode, setThemeMode }) => {
           </Logo>
         </Link>
         {/* Menu items  */}
-        <Item>
-          <HomeIcon /> Home
-        </Item>
-        <Item>
-          <ExploreOutlinedIcon /> Explore
-        </Item>
-        <Item>
-          <SubscriptionsOutlinedIcon /> Subscriptions
-        </Item>
+        <Link to='/' style={{ textDecoration: 'none', color: 'inherit' }}>
+          <Item>
+            <HomeIcon /> Home
+          </Item>
+        </Link>
+        <Link
+          to='/trending'
+          style={{ textDecoration: 'none', color: 'inherit' }}
+        >
+          <Item>
+            <ExploreOutlinedIcon /> Explore
+          </Item>
+        </Link>
+        <Link
+          to='/subscriptions'
+          style={{ textDecoration: 'none', color: 'inherit' }}
+        >
+          <Item>
+            <SubscriptionsOutlinedIcon /> Subscriptions
+          </Item>
+        </Link>
         <Hr />
         <Item>
           <VideoLibraryOutlinedIcon /> Library
@@ -119,15 +134,19 @@ const Menu = ({ themeMode, setThemeMode }) => {
           <HistoryOutlinedIcon /> History
         </Item>
         <Hr />
-        <Login>
-          Sign in to like videos, comment, and subscribe.
-          <Link to='/login' style={{ textDecoration: 'none' }}>
-            <Button>
-              <AccountCircleOutlinedIcon /> Sign In
-            </Button>
-          </Link>
-        </Login>
-        <Hr />
+        {!currentUser && (
+          <>
+            <Login>
+              Sign in to like videos, comment, and subscribe.
+              <Link to='/login' style={{ textDecoration: 'none' }}>
+                <Button>
+                  <AccountCircleOutlinedIcon /> Sign In
+                </Button>
+              </Link>
+            </Login>
+            <Hr />
+          </>
+        )}
         <Title>Best of LamaTube</Title>
         <Item>
           <LibraryMusicOutlinedIcon />
