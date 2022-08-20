@@ -1,10 +1,19 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import VideoCallOutlinedIcon from '@mui/icons-material/VideoCallOutlined';
+import Grow from '@mui/material/Grow';
+import Paper from '@mui/material/Paper';
+import Popper from '@mui/material/Popper';
+import ClickAwayListener from '@mui/material/ClickAwayListener';
+import MenuItem from '@mui/material/MenuItem';
+import MenuList from '@mui/material/MenuList';
+import Divider from '@mui/material/Divider';
+import ListItemText from '@mui/material/ListItemText';
+import { logout } from '../redux/userSlice';
 
 // Styles
 const Container = styled.div`
@@ -74,11 +83,62 @@ const Avatar = styled.img`
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background-color: var(--background-color);
+  {!currentUser?.img && background-color: var(--background-color);}
+`;
+
+const Dropdown = styled.div`
+  cursor: pointer;
 `;
 
 const Navbar = () => {
+  const [open, setOpen] = useState(false);
+  const [currentTheme, setCurrentTheme] = useState(
+    localStorage.getItem('themeColor')
+  );
+
   const { currentUser } = useSelector((state) => state.user);
+
+  const anchorRef = useRef(null);
+  const dispatch = useDispatch();
+
+  // Get current theme
+  useEffect(() => {
+    const theme = localStorage.getItem('themeColor');
+    setCurrentTheme(theme);
+  }, [localStorage.getItem('themeColor')]);
+
+  // Dropdown toggle
+  const handleToggle = () => {
+    setOpen((prevOpen) => !prevOpen);
+  };
+
+  // Dropdown close
+  const handleClose = (event) => {
+    if (anchorRef.current && anchorRef.current.contains(event.target)) {
+      return;
+    } else {
+      setOpen(false);
+    }
+  };
+
+  function handleListKeyDown(event) {
+    if (event.key === 'Tab') {
+      event.preventDefault();
+      setOpen(false);
+    } else if (event.key === 'Escape') {
+      setOpen(false);
+    }
+  }
+
+  // Logout user
+  const handleLogout = () => {
+    try {
+      dispatch(logout());
+      handleToggle();
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
     <Container>
@@ -93,8 +153,62 @@ const Navbar = () => {
           {currentUser ? (
             <User>
               <VideoCallOutlinedIcon />
-              <Avatar />
-              {currentUser.name}
+              {/* Menu dropdown  */}
+              <Dropdown
+                ref={anchorRef}
+                aria-controls={open ? 'composition-menu' : undefined}
+                aria-expanded={open ? 'true' : undefined}
+                aria-haspopup='true'
+                onClick={handleToggle}
+              >
+                <Avatar src={currentUser?.img} />
+              </Dropdown>
+              <Popper
+                open={open}
+                anchorEl={anchorRef.current}
+                role={undefined}
+                placement='bottom-start'
+                transition
+                disablePortal
+              >
+                {({ TransitionProps, placement }) => (
+                  <Grow
+                    {...TransitionProps}
+                    style={{
+                      transformOrigin:
+                        placement === 'bottom-start' ? 'left top' : 'right top',
+                    }}
+                  >
+                    <Paper
+                      style={{
+                        backgroundColor:
+                          currentTheme === 'darkTheme'
+                            ? 'var(--secondary-color)'
+                            : 'var(--white-color)',
+                        color:
+                          currentTheme === 'darkTheme'
+                            ? 'var(--white-color)'
+                            : 'var(--black-color)',
+                      }}
+                    >
+                      <ClickAwayListener onClickAway={handleClose}>
+                        <MenuList
+                          autoFocusItem={open}
+                          id='composition-menu'
+                          aria-labelledby='composition-button'
+                          onKeyDown={handleListKeyDown}
+                        >
+                          <MenuItem style={{ cursor: 'default' }}>
+                            {currentUser?.name}
+                          </MenuItem>
+                          <Divider />
+                          <MenuItem onClick={handleLogout}>Logout</MenuItem>
+                        </MenuList>
+                      </ClickAwayListener>
+                    </Paper>
+                  </Grow>
+                )}
+              </Popper>
             </User>
           ) : (
             <Link to='/login' style={{ textDecoration: 'none' }}>

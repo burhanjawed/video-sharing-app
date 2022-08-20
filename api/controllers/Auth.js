@@ -35,7 +35,7 @@ export const signin = async (req, res, next) => {
     // check if password is correct
     const isCorrect = await bcrypt.compare(req.body.password, user.password);
 
-    // if password is incorrect
+    // if password is incorrect throw error
     if (!isCorrect)
       return next(createError(400, 'Name or password is incorrect'));
 
@@ -51,6 +51,46 @@ export const signin = async (req, res, next) => {
       })
       .status(200)
       .json(otherInfo);
+  } catch (err) {
+    next(err);
+  }
+};
+
+// Google authentication
+export const googleAuth = async (req, res, next) => {
+  try {
+    const user = await User.findOne({
+      email: req.body.email,
+    });
+
+    if (user) {
+      // create access token
+      const token = jwt.sign({ id: user._id }, process.env.JWT);
+
+      res
+        .cookie('access_token', token, {
+          httpOnly: true,
+        })
+        .status(200)
+        .json(user._doc);
+    } else {
+      const newUser = new User({
+        ...req.body,
+        fromGoogle: true,
+      });
+
+      const savedUser = await newUser.save();
+
+      // create access token
+      const token = jwt.sign({ id: savedUser._id }, process.env.JWT);
+
+      res
+        .cookie('access_token', token, {
+          httpOnly: true,
+        })
+        .status(200)
+        .json(savedUser._doc);
+    }
   } catch (err) {
     next(err);
   }
