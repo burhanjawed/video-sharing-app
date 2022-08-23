@@ -24,11 +24,23 @@ export const userSlice = createSlice({
     logout: () => {
       return initialState;
     },
+    subscription: (state, action) => {
+      if (state.currentUser.subscriptions.includes(action.payload)) {
+        state.currentUser.subscriptions.splice(
+          state.currentUser.subscriptions.findIndex(
+            (channelId) => channelId === action.payload
+          ),
+          1
+        );
+      } else {
+        state.currentUser.subscriptions.push(action.payload);
+      }
+    },
   },
 });
 
 // export functions
-export const { loginStart, loginSuccess, loginFailure, logout } =
+export const { loginStart, loginSuccess, loginFailure, logout, subscription } =
   userSlice.actions;
 
 // export reducer

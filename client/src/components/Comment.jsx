@@ -1,5 +1,7 @@
-import React from 'react';
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import { format } from 'timeago.js';
 
 // Styles
 const Container = styled.div`
@@ -38,20 +40,31 @@ const Text = styled.span`
   color: ${({ theme }) => theme.text};
 `;
 
-const Comment = () => {
+const Comment = ({ comment }) => {
+  const [user, setUser] = useState([]);
+
+  // fetch comment user
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const res = await axios.get(`/users/find/${comment?.userId}`);
+        setUser(res.data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    fetchUser();
+  }, [comment?.userId]);
+
   return (
     <Container>
       <Avatar src='https://yt3.ggpht.com/yti/APfAmoE-Q0ZLJ4vk3vqmV4Kwp0sbrjxLyB8Q4ZgNsiRH=s88-c-k-c0x00ffffff-no-rj-mo' />
       <Details>
         <Name>
-          John Doe <Date>1 day ago</Date>
+          {user?.name} <Date>{format(comment?.createdAt)}</Date>
         </Name>
-        <Text>
-          Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-          Necessitatibus non doloremque veniam, rerum debitis eius error
-          corporis, aliquam ratione quod, ut ipsam? Adipisci vel magnam sed
-          aperiam, inventore maiores nobis.
-        </Text>
+        <Text>{comment?.desc}</Text>
       </Details>
     </Container>
   );
