@@ -14,7 +14,7 @@ const Container = styled.div`
 `;
 
 const Image = styled.img`
-  width: 100%;
+  width: ${(props) => (props.type === 'sm' ? '50%' : '100%')};
   height: ${(props) => (props.type === 'sm' ? '120px' : '202px')};
   background-color: var(--background-color);
   object-fit: cover;

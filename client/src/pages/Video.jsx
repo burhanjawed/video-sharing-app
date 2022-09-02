@@ -6,7 +6,7 @@ import ThumbDownOutlinedIcon from '@mui/icons-material/ThumbDownOutlined';
 import ThumbDownIcon from '@mui/icons-material/ThumbDown';
 import ReplyOutlinedIcon from '@mui/icons-material/ReplyOutlined';
 import AddTaskOutlinedIcon from '@mui/icons-material/AddTaskOutlined';
-import { Card, Comments } from '../components';
+import { Card, Comments, Recommendation } from '../components';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import axios from 'axios';
@@ -60,10 +60,6 @@ const Button = styled.div`
 const Hr = styled.hr`
   border: 0.5px solid ${({ theme }) => theme.soft};
   margin: 15px 0;
-`;
-
-const Recommendation = styled.div`
-  flex: 2;
 `;
 
 const Channel = styled.div`
@@ -203,7 +199,7 @@ const Video = () => {
     <Container>
       <Content>
         <VideoWrapper>
-          <VideoFrame src={currentVideo?.videoUrl} />
+          <VideoFrame src={currentVideo?.videoUrl} controls autoPlay />
         </VideoWrapper>
         <Title>{currentVideo?.title}</Title>
         <Details>
@@ -249,9 +245,9 @@ const Video = () => {
           </ChannelInfo>
           {/* Subscribe button  */}
 
-          {currentUser._id === channel._id ? (
+          {currentUser?._id === channel?._id ? (
             ''
-          ) : currentUser?.subscriptions.includes(channel._id) ? (
+          ) : currentUser?.subscriptions.includes(channel?._id) ? (
             <Subscribed onClick={handleSubscription}>Subscribed</Subscribed>
           ) : (
             <Subscribe onClick={handleSubscription}>Subscribe</Subscribe>
@@ -260,18 +256,8 @@ const Video = () => {
         <Hr />
         <Comments videoId={currentVideo?._id} currentUser={currentUser} />
       </Content>
-      <Recommendation>
-        <Card type='sm' />
-        <Card type='sm' />
-        <Card type='sm' />
-        <Card type='sm' />
-        <Card type='sm' />
-        <Card type='sm' />
-        <Card type='sm' />
-        <Card type='sm' />
-        <Card type='sm' />
-        <Card type='sm' />
-      </Recommendation>
+      {/* Recommended videos */}
+      <Recommendation tags={currentVideo?.tags} />
     </Container>
   );
 };

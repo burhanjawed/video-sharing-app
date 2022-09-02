@@ -3,7 +3,7 @@ import styled, { ThemeProvider } from 'styled-components';
 import { Menu, Navbar } from '../components';
 import { darkTheme, lightTheme } from '../utils/Theme';
 import { Routes, Route, BrowserRouter } from 'react-router-dom';
-import { Home, Login, Video } from '../pages';
+import { Home, Login, Search, Video } from '../pages';
 
 // Styles
 const Container = styled.div`
@@ -48,6 +48,7 @@ function App() {
                   <Route index element={<Home type='random' />} />
                   <Route path='/trending' element={<Home type='trend' />} />
                   <Route path='/subscriptions' element={<Home type='sub' />} />
+                  <Route path='/search' element={<Search />} />
                   <Route path='login' element={<Login />} />
                   <Route path='video'>
                     <Route path=':id' element={<Video />} />

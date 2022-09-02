@@ -4,6 +4,7 @@ export const darkTheme = {
   text: 'var(--white-color)',
   textSoft: '#aaaaaa',
   soft: 'var(--divider-color)',
+  btnHover: '#2e2e2e',
 };
 
 export const lightTheme = {
@@ -12,4 +13,5 @@ export const lightTheme = {
   text: 'var(--black-color)',
   textSoft: '#606060',
   soft: '#f5f5f5',
+  btnHover: '#dbd9d9',
 };

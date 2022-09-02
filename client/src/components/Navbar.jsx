@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Upload } from '../components';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import LogoutIcon from '@mui/icons-material/Logout';
@@ -94,8 +94,11 @@ const Dropdown = styled.div`
 `;
 
 const Navbar = () => {
+  const navigate = useNavigate();
+
   const [open, setOpen] = useState(false);
   const [openPopup, setOpenPopup] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
   const [currentTheme, setCurrentTheme] = useState(
     localStorage.getItem('themeColor')
   );
@@ -144,14 +147,28 @@ const Navbar = () => {
     }
   };
 
+  // 'Enter' key pressed in search box
+  const handleEnterKeyPress = (e) => {
+    if (e.keyCode === 13) {
+      navigate(`/search?q=${searchQuery}`);
+    }
+  };
+
   return (
     <>
       <Container>
         <Wrapper>
           {/* Search input  */}
           <Search>
-            <Input placeholder='Search' />
-            <SearchOutlinedIcon />
+            <Input
+              placeholder='Search'
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyDown={handleEnterKeyPress}
+            />
+            <SearchOutlinedIcon
+              onClick={() => navigate(`/search?q=${searchQuery}`)}
+              style={{ cursor: 'pointer' }}
+            />
           </Search>
           {/* Login button  */}
           <Login>
